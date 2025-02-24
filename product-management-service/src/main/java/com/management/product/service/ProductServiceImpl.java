@@ -1,12 +1,16 @@
 package com.management.product.service;
 
+import com.management.product.Client.DmsFeign;
 import com.management.product.dto.ProductRequestDto;
 import com.management.product.dto.ProductResponseDto;
+import com.management.product.model.DmsModel;
 import com.management.product.model.ProductModel;
 import com.management.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,9 +21,14 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
 
+    private final DmsFeign dmsFeign;
+
     @Override
-    public String addProduct(ProductRequestDto productRequestDto) {
+    public String addProduct(ProductRequestDto productRequestDto, DmsModel dmsModel) {
         try {
+
+            ResponseEntity<String> productImageDmsId = dmsFeign.uploadDocument(dmsModel.getFile(),dmsModel.getUploadedBy(),dmsModel.getDocumentCategory(),dmsModel.getServiceName());
+            log.info("ProductImageDMSId: {}",productImageDmsId.getBody());
             ProductModel productModel = ProductModel.builder()
                     .productName(productRequestDto.productName())
                     .productType(productRequestDto.productType())
@@ -27,7 +36,7 @@ public class ProductServiceImpl implements ProductService{
                     .productStockQuantity(productRequestDto.productStockQuantity())
                     .productSupplierId(productRequestDto.productSupplierId())
                     .productCategory(productRequestDto.productCategory())
-                    .productImageDmsId(productRequestDto.productImageDmsId())
+                    .productImageDmsId(productImageDmsId.getBody())
                     .productAverageRating(productRequestDto.productAverageRating())
                     .productReviewCount(productRequestDto.productReviewCount())
                     .build();

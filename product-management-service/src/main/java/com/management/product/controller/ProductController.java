@@ -1,13 +1,17 @@
 package com.management.product.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.management.product.dto.ProductRequestDto;
 import com.management.product.dto.ProductResponseDto;
+import com.management.product.model.DmsModel;
 import com.management.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,10 +23,28 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/add-product")
-    public ResponseEntity<String> addProduct(@RequestBody ProductRequestDto productRequestDto) {
-        String response = productService.addProduct(productRequestDto);
+    public ResponseEntity<String> addProduct(
+            @RequestPart("product") String productRequestDtoJson,
+            @RequestParam("file") MultipartFile file) {
 
-        if(response != null){
+        // Convert the product JSON String into ProductRequestDto object
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductRequestDto productRequestDto = null;
+        try {
+            productRequestDto = objectMapper.readValue(productRequestDtoJson, ProductRequestDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        DmsModel dmsModel = new DmsModel();
+        dmsModel.setFile(file);
+        dmsModel.setServiceName("PRODUCT_MANAGEMENT_SERVICE");
+        dmsModel.setUploadedBy("Munot");
+        dmsModel.setDocumentCategory("Payment Invoice");
+
+        String response = productService.addProduct(productRequestDto, dmsModel);
+
+        if (response != null) {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
 

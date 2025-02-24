@@ -18,13 +18,13 @@ public class DmsController {
 
     @PostMapping("/upload-document-to-dms")
     public ResponseEntity<String> uploadDocument(
-            @RequestParam("file") MultipartFile file,
+            @RequestPart("file") MultipartFile file,
             @RequestParam("uploadedBy") String uploadedBy,
             @RequestParam("documentCategory") String documentCategory,
             @RequestParam("serviceName") String serviceName) {
         try {
             DmsModel uploadedDocument = dmsService.uploadDocument(file, uploadedBy, documentCategory, serviceName);
-            return new ResponseEntity<>("Document uploaded successfully with ID: " + uploadedDocument.getDmsId(), HttpStatus.CREATED);
+            return new ResponseEntity<>(uploadedDocument.getDmsId(), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("File upload failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
