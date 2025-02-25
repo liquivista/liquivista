@@ -1,4 +1,4 @@
-package api_gateway.routes;
+/* package api_gateway.routes;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,3 +33,6 @@ public class Routes {
                         .build());
     }
 }
+
+*/
+
