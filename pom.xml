@@ -18,6 +18,7 @@
     <modules>
         <module>product-management-service</module>
         <module>document-management-service</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>
@@ -51,6 +52,10 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

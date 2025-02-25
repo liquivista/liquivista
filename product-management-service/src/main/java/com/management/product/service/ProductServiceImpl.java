@@ -8,6 +8,8 @@ import com.management.product.model.ProductModel;
 import com.management.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +68,26 @@ public class ProductServiceImpl implements ProductService{
             return mapToProductResponse(productModel);
         }
         return null;
+    }
+
+    @Override
+    public ResponseEntity<?> downloadDocument(String dmsId) {
+        DmsModel document = dmsFeign.downloadDocument(dmsId);
+        log.info("Inside Download Document Product Service with DMS Id: {}",dmsId);
+        if (document != null) {
+            String contentType = document.getFileType();
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+            ByteArrayResource resource = new ByteArrayResource(document.getFileData());
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "inline; filename=" + document.getFileName())
+                    .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+                    .contentLength(document.getFileSize())
+                    .body(resource);
+        }
+        return new ResponseEntity<>("Document not found", HttpStatus.NOT_FOUND);
     }
 
     private ProductResponseDto mapToProductResponse(ProductModel productsList) {

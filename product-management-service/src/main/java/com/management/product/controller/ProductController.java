@@ -72,4 +72,9 @@ public class ProductController {
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/download-document/{dmsId}")
+    public ResponseEntity<?> downloadDocument(@PathVariable String dmsId){
+        return productService.downloadDocument(dmsId);
+    }
 }

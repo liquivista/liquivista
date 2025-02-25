@@ -1,5 +1,6 @@
 package com.management.product.Client;
 
+import com.management.product.model.DmsModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,4 +22,7 @@ public interface DmsFeign {
 
     @GetMapping("/get-document/{dmsId}")
     ResponseEntity<?> getDocument(@PathVariable String dmsId);
+
+    @GetMapping("/download-document/{dmsId}")
+    public DmsModel downloadDocument(@PathVariable String dmsId);
 }

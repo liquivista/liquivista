@@ -59,4 +59,9 @@ public class DmsController {
         return new ResponseEntity<>("Document not found", HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/download-document/{dmsId}")
+    public DmsModel downloadDocument(@PathVariable String dmsId){
+        return dmsService.getDocumentById(dmsId);
+    }
+
 }
