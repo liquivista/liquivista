@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(value = "dmsFeign" , url = "http://localhost:8080/dms")
+@FeignClient(value = "dmsFeign" , url = "http://localhost:9801/dms")
 public interface DmsFeign {
 
     @PostMapping(value = "/upload-document-to-dms", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

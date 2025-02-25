@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://liquivistadb.criie468yuq9.eu-north-1.rds.amazonaws.com:5432/postgres
+    username: postgres
+    password: Liquivista123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+server:
+  port: 9802
+
+eureka:
+    client:
+      serviceUrl:
+        defaultZone: http://localhost:9762/eureka/

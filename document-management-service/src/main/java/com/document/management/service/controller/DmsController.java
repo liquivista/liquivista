@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.ByteArrayResource;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/dms")
 @RequiredArgsConstructor
@@ -62,6 +64,11 @@ public class DmsController {
     @GetMapping("/download-document/{dmsId}")
     public DmsModel downloadDocument(@PathVariable String dmsId){
         return dmsService.getDocumentById(dmsId);
+    }
+
+    @GetMapping("/get-all-documents")
+    public List<DmsModel> downloadDocument(){
+        return dmsService.getAllDocuments();
     }
 
 }

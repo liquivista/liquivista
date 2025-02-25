@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +70,11 @@ public class DmsServiceImpl implements DmsService{
             log.warn("Document with DMS ID: {} not found", dmsId);
         }
         return document;
+    }
+
+    @Override
+    public List<DmsModel> getAllDocuments() {
+        log.info("Fetching all documents");
+        return dmsRepository.findAll();
     }
 }

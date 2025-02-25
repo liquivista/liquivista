@@ -1,5 +1,5 @@
 server:
-  port: 8222
+  port: 9222
 
 spring:
   cloud:
@@ -12,7 +12,11 @@ spring:
           uri: lb:http://DOCUMENT-MANAGEMENT-SERVICE
           predicates:
             - Path=/dms/**
+        - id: product-management-service
+          uri: lb:http://PRODUCT-MANAGEMENT-SERVICE
+          predicates:
+            - Path=/product-management/**
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8762/eureka/
+      defaultZone: http://localhost:9762/eureka/
