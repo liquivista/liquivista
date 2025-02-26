@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user-management-service
+    username: postgres
+    password: cdac
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+server:
+  port: 9803
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9762/eureka/

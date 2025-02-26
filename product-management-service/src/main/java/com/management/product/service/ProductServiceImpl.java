@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService{
             log.info("Product Saved Successfully With Product Id: {}", response.getProductId());
             return "Product Saved Successfully With Product Id: {}"+ response.getProductId();
         }catch(Exception e){
-            log.error("Product Not Added Got Exception :"+e.getMessage());
+            log.error("Product Not Added Got Exception : {}",e.getMessage());
             return null;
         }
     }
