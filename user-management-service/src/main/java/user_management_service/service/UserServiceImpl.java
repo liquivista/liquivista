@@ -8,6 +8,8 @@ import user_management_service.dto.UserResponseDto;
 import user_management_service.model.UserModel;
 import user_management_service.repository.UserRepository;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +43,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponseDto getUserById(Long userId) {
         try {
-            // Find user by ID
             Optional<UserModel> userModelOptional = userRepository.findById(userId);
 
             if (userModelOptional.isPresent()) {
@@ -113,6 +114,37 @@ public class UserServiceImpl implements UserService{
         } catch (Exception e) {
             log.error("Error while updating user. Exception: {}", e.getMessage());
             return "Error while updating user.";
+        }
+    }
+
+    @Override
+    public List<UserResponseDto> getAllUsers() {
+        try{
+            List<UserModel> userList = userRepository.findAll();
+
+            if(!userList.isEmpty()){
+                log.info("All Users List :{}", userList);
+                return userList.stream()
+                        .map(userModel -> new UserResponseDto(
+                                userModel.getUserId(),
+                                userModel.getUserFirstName(),
+                                userModel.getUserLastName(),
+                                userModel.getUserEmail(),
+                                userModel.getUserPhoneNumber(),
+                                userModel.getUserGender(),
+                                userModel.getUserDateOfBirth(),
+                                userModel.getLegalDocumentFilePath(),
+                                userModel.getIsAgeVerified(),
+                                userModel.getUserStatus()
+                        ))
+                        .toList();
+            }else {
+                log.warn("User List is Empty :{}",userList);
+                return Collections.emptyList();
+            }
+        }catch(Exception e){
+            log.error("Got Exception in getAllUsers :{}",e.getMessage());
+            return null;
         }
     }
 

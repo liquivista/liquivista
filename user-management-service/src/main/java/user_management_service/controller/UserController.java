@@ -8,6 +8,8 @@ import user_management_service.dto.UserRequestDto;
 import user_management_service.dto.UserResponseDto;
 import user_management_service.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user-management")
 @AllArgsConstructor
@@ -34,6 +36,20 @@ public class UserController {
         }
         return new ResponseEntity<>("User not found.", HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/get-all-users")
+    public ResponseEntity<?> getAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsers();
+
+        if (users != null && !users.isEmpty()) {
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } else if (users != null) {
+            return new ResponseEntity<>("No users found.", HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>("An error occurred while fetching users.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping("/delete-user/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId){
