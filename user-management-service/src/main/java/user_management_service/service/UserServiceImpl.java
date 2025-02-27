@@ -2,12 +2,17 @@ package user_management_service.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import user_management_service.Client.DmsFeign;
 import user_management_service.dto.UserRequestDto;
 import user_management_service.dto.UserResponseDto;
 import user_management_service.model.UserModel;
 import user_management_service.repository.UserRepository;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +23,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+
+    private final DmsFeign dmsFeign;
 
     @Override
     public String registerUser(UserRequestDto userRequestDto) {
@@ -147,6 +154,44 @@ public class UserServiceImpl implements UserService{
             return null;
         }
     }
+
+    @Override
+    public String uploadLegalDoc(Long userId, MultipartFile file) {
+        Optional<UserModel> user = userRepository.findById(userId);
+
+        if (user.isPresent()) {
+            log.info("User Found with User Id: {}", userId);
+
+            LocalDate userDob = user.get().getUserDateOfBirth();
+            LocalDate currentDate = LocalDate.now();
+            int age = Period.between(userDob, currentDate).getYears();
+            if (age > 25) {
+                log.info("User is older than 25 years, proceeding with document upload.");
+                ResponseEntity<String> productImageDmsId = dmsFeign.uploadDocument(file, user.get().getUserId().toString(),
+                        "Legal Age Verification Doc", "USER_MANAGEMENT_SERVICE");
+
+                if (productImageDmsId != null) {
+                    UserModel existingUser = user.get();
+                    existingUser.setLegalDocumentFilePath(productImageDmsId.getBody());
+                    existingUser.setIsAgeVerified(true);
+
+                    userRepository.save(user.get());
+                    log.info("Legal document uploaded and user is age verified.");
+                    return "Success: Legal document uploaded and user is verified.";
+                } else {
+                    log.error("Document upload failed for userId: {}", userId);
+                    return "Error: Document upload failed.";
+                }
+            } else {
+                log.warn("User is not older than 25 years. Age: {}", age);
+                return "Error: User is not older than 25 years.";
+            }
+        } else {
+            log.warn("User Not Found with User Id: {}", userId);
+            return "Error: User Not Found with User Id: " + userId;
+        }
+    }
+
 
     private static UserModel getUserModel(UserRequestDto userRequestDto, Optional<UserModel> userModelOptional) {
         UserModel userModel = userModelOptional.get();

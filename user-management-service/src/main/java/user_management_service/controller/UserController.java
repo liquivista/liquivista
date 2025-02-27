@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import user_management_service.dto.UserRequestDto;
 import user_management_service.dto.UserResponseDto;
 import user_management_service.service.UserService;
@@ -28,13 +29,13 @@ public class UserController {
     }
 
     @GetMapping("/get-user/{userId}")
-    public ResponseEntity<?> getUser(@PathVariable("userId") Long userId){
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable("userId") Long userId){
         UserResponseDto user = userService.getUserById(userId);
 
         if(user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<>("User not found.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/get-all-users")
@@ -70,6 +71,18 @@ public class UserController {
         }
         return new ResponseEntity<>("User modification failed. Please try again.", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("upload-legal-doc")
+    public ResponseEntity<?> uploadLegalDoc(@RequestParam("userId") Long userId, @RequestParam("file") MultipartFile file) {
+        String response = userService.uploadLegalDoc(userId, file);
+
+        if (response.startsWith("Success")) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 
 }

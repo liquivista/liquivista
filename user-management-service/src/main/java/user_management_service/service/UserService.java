@@ -1,5 +1,6 @@
 package user_management_service.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import user_management_service.dto.UserRequestDto;
 import user_management_service.dto.UserResponseDto;
 
@@ -15,4 +16,6 @@ public interface UserService {
     String updateUser(Long userId, UserRequestDto userRequestDto);
 
     List<UserResponseDto> getAllUsers();
+
+    String uploadLegalDoc(Long userId, MultipartFile file);
 }
