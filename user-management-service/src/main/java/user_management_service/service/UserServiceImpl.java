@@ -3,6 +3,7 @@ package user_management_service.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import user_management_service.Client.DmsFeign;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public String registerUser(UserRequestDto userRequestDto) {
         try {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             UserModel userModel = UserModel.builder()
                     .userFirstName(userRequestDto.userFirstName())
                     .userLastName(userRequestDto.userLastName())
@@ -38,19 +40,23 @@ public class UserServiceImpl implements UserService{
                     .userDateOfBirth(userRequestDto.userDateOfBirth())
                     .userStatus("active")
                     .build();
+
+            String encryptedPassword = passwordEncoder.encode(userRequestDto.userPassword());
+            userModel.setUserPassword(encryptedPassword);
+
             UserModel response = userRepository.save(userModel);
             log.info("User Registered Successfully With User Id: {}", response.getUserId());
             return "User Registered Successfully With User Id: {}" + response.getUserId();
         }catch (Exception e){
             log.error("User Not Registered Got Exception : {}",e.getMessage());
-            return null;
+            return e.getMessage();
         }
     }
     
     @Override
     public UserResponseDto getUserById(Long userId) {
         try {
-            Optional<UserModel> userModelOptional = userRepository.findById(userId);
+            Optional<UserModel> userModelOptional = userRepository.findByUserIdAndUserStatus(userId,"active");
 
             if (userModelOptional.isPresent()) {
                 UserResponseDto userResponseDto = getUserResponseDto(userModelOptional.get());
@@ -77,14 +83,15 @@ public class UserServiceImpl implements UserService{
                 userModel.getUserDateOfBirth(),
                 userModel.getLegalDocumentFilePath(),
                 userModel.getIsAgeVerified(),
-                userModel.getUserStatus()
+                userModel.getUserStatus(),
+                userModel.getUserPassword()
         );
     }
 
     @Override
     public boolean deleteUser(Long userId) {
         try {
-            Optional<UserModel> userModelOptional = userRepository.findById(userId);
+            Optional<UserModel> userModelOptional = userRepository.findByUserIdAndUserStatus(userId,"active");
 
             if (userModelOptional.isPresent()) {
                 UserModel userModel = userModelOptional.get();
@@ -105,7 +112,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public String updateUser(Long userId, UserRequestDto userRequestDto) {
         try {
-            Optional<UserModel> userModelOptional = userRepository.findById(userId);
+            Optional<UserModel> userModelOptional = userRepository.findByUserIdAndUserStatus(userId,"active");
 
             if (userModelOptional.isPresent()) {
                 UserModel userModel = getUserModel(userRequestDto, userModelOptional.get());
@@ -126,7 +133,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserResponseDto> getAllUsers() {
         try{
-            List<UserModel> userList = userRepository.findAll();
+            List<UserModel> userList = userRepository.findByUserStatus("active");
 
             if(!userList.isEmpty()){
                 log.info("All Users List :{}", userList);
@@ -141,7 +148,8 @@ public class UserServiceImpl implements UserService{
                                 userModel.getUserDateOfBirth(),
                                 userModel.getLegalDocumentFilePath(),
                                 userModel.getIsAgeVerified(),
-                                userModel.getUserStatus()
+                                userModel.getUserStatus(),
+                                userModel.getUserPassword()
                         ))
                         .toList();
             }else {
@@ -156,7 +164,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public String uploadLegalDoc(Long userId, MultipartFile file) {
-        Optional<UserModel> user = userRepository.findById(userId);
+        Optional<UserModel> user = userRepository.findByUserIdAndUserStatus(userId,"active");
 
         if (user.isPresent()) {
             log.info("User Found with User Id: {}", userId);
@@ -193,6 +201,7 @@ public class UserServiceImpl implements UserService{
 
 
     private static UserModel getUserModel(UserRequestDto userRequestDto, UserModel userModel) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         if (userRequestDto.userFirstName() != null) {
             userModel.setUserFirstName(userRequestDto.userFirstName());
@@ -212,7 +221,16 @@ public class UserServiceImpl implements UserService{
         if (userRequestDto.userDateOfBirth() != null) {
             userModel.setUserDateOfBirth(userRequestDto.userDateOfBirth());
         }
+        if (userRequestDto.userPassword() != null) {
+            String encryptedPassword = passwordEncoder.encode(userRequestDto.userPassword());
+            userModel.setUserPassword(encryptedPassword);
+        }
         return userModel;
+    }
+
+    public boolean verifyPassword(String rawPassword, String storedPasswordHash) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(rawPassword, storedPasswordHash);
     }
 
 }

@@ -8,5 +8,6 @@ public record UserRequestDto(Long userId,
                              String userEmail,
                              String userPhoneNumber,
                              String userGender,
-                             LocalDate userDateOfBirth) {
+                             LocalDate userDateOfBirth,
+                             String userPassword) {
 }

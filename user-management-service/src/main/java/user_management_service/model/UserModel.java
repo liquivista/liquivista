@@ -45,4 +45,8 @@ public class UserModel {
 
     @Column(name = "user_status")
     private String userStatus;
+
+    @Column(name = "user_password")
+    private String userPassword;
+
 }

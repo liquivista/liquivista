@@ -11,4 +11,5 @@ public record UserResponseDto(Long userId,
                               LocalDate userDateOfBirth,
                               String legalDocumentFilePath,
                               Boolean isAgeVerified,
-                              String userStatus) { }
+                              String userStatus,
+                              String userPassword) { }
