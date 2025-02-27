@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserFeign {
 
     @GetMapping("/get-user/{userId}")
-    public ResponseEntity<UserResponseDto> getUser(@PathVariable("userId") Long userId);
+    ResponseEntity<UserResponseDto> getUser(@PathVariable("userId") Long userId);
 
     @GetMapping("/get-all-users")
-    public ResponseEntity<?> getAllUsers();
+    ResponseEntity<?> getAllUsers();
 }

@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService{
             Optional<UserModel> userModelOptional = userRepository.findById(userId);
 
             if (userModelOptional.isPresent()) {
-                UserResponseDto userResponseDto = getUserResponseDto(userModelOptional);
+                UserResponseDto userResponseDto = getUserResponseDto(userModelOptional.get());
                 log.info("User Found With User Id: {}", userId);
                 return userResponseDto;
             } else {
@@ -66,8 +66,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    private static UserResponseDto getUserResponseDto(Optional<UserModel> userModelOptional) {
-        UserModel userModel = userModelOptional.get();
+    private static UserResponseDto getUserResponseDto(UserModel userModel) {
         return new UserResponseDto(
                 userModel.getUserId(),
                 userModel.getUserFirstName(),
@@ -109,7 +108,7 @@ public class UserServiceImpl implements UserService{
             Optional<UserModel> userModelOptional = userRepository.findById(userId);
 
             if (userModelOptional.isPresent()) {
-                UserModel userModel = getUserModel(userRequestDto, userModelOptional);
+                UserModel userModel = getUserModel(userRequestDto, userModelOptional.get());
                 userRepository.save(userModel);
 
                 log.info("User Updated Successfully With User Id: {}", userId);
@@ -193,8 +192,7 @@ public class UserServiceImpl implements UserService{
     }
 
 
-    private static UserModel getUserModel(UserRequestDto userRequestDto, Optional<UserModel> userModelOptional) {
-        UserModel userModel = userModelOptional.get();
+    private static UserModel getUserModel(UserRequestDto userRequestDto, UserModel userModel) {
 
         if (userRequestDto.userFirstName() != null) {
             userModel.setUserFirstName(userRequestDto.userFirstName());

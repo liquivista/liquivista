@@ -24,5 +24,5 @@ public interface DmsFeign {
     ResponseEntity<?> getDocument(@PathVariable String dmsId);
 
     @GetMapping("/download-document/{dmsId}")
-    public DmsModel downloadDocument(@PathVariable String dmsId);
+    DmsModel downloadDocument(@PathVariable String dmsId);
 }
