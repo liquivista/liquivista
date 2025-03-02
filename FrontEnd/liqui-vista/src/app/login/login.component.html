@@ -1,0 +1,41 @@
+<div class="login-container">
+  <h2>Login to Liqui Vista</h2>
+  
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input 
+      type="text" 
+      id="username" 
+      name="username"
+      [(ngModel)]="username" 
+      placeholder="Enter your username"
+    />
+  </div>
+  
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input 
+      type="password" 
+      id="password" 
+      name="password"
+      [(ngModel)]="password" 
+      placeholder="Enter your password"
+    />
+  </div>
+  
+  <button (click)="loginWithCredentials()" class="login-btn">
+    Login with Credentials
+  </button>
+  
+  <div class="divider">
+    <span>OR</span>
+  </div>
+  
+  <button (click)="loginWithSSO()" class="sso-btn">
+    <span class="icon">🔐</span> Login with Keycloak SSO
+  </button>
+  
+  <div class="footer-text">
+    <p>Access the Liqui Vista platform securely</p>
+  </div>
+</div>

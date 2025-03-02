@@ -1,0 +1,126 @@
+.login-container {
+  width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  
+  h2 {
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 24px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+      
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
+    }
+  }
+  
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-weight: 600;
+    
+    &:hover {
+      background: #0056b3;
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+  
+  .login-btn {
+    background: #2c7be5;
+    
+    &:hover {
+      background: #1a68d1;
+    }
+  }
+  
+  .sso-btn {
+    background: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .icon {
+      margin-right: 8px;
+    }
+    
+    &:hover {
+      background: #5a6268;
+    }
+  }
+  
+  .divider {
+    position: relative;
+    margin: 25px 0;
+    text-align: center;
+    
+    &:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e0e0e0;
+      z-index: 1;
+    }
+    
+    span {
+      position: relative;
+      background: #fff;
+      padding: 0 15px;
+      color: #777;
+      z-index: 2;
+      font-size: 14px;
+    }
+  }
+  
+  .footer-text {
+    margin-top: 25px;
+    color: #6c757d;
+    font-size: 14px;
+  }
+}
+
+/* Add responsive styling */
+@media (max-width: 480px) {
+  .login-container {
+    width: 90%;
+    padding: 20px;
+  }
+}
