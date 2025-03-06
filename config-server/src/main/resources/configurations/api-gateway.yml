@@ -2,6 +2,12 @@ server:
   port: 9222
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/keycloak-app
+
   cloud:
     gateway:
       discovery:
@@ -20,6 +26,7 @@ spring:
           uri: lb:http://USER-MANAGEMENT-SERVICE
           predicates:
             - Path=/user-management/**
+
 eureka:
   client:
     serviceUrl:
