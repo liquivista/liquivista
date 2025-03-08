@@ -4,6 +4,7 @@ import com.service.management.notification.dto.JsonResponseDto;
 import com.service.management.notification.dto.NotificationDto;
 import com.service.management.notification.dto.NotificationRequestDto;
 import com.service.management.notification.producer.RabbitMQProducer;
+import com.service.management.notification.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -16,14 +17,18 @@ public class RabbitMQJsonConsumer {
 
     private final RabbitMQProducer rabbitMQProducer;
 
-    public RabbitMQJsonConsumer(RabbitMQProducer rabbitMQProducer) {
+    private final EmailService emailService;
+
+    public RabbitMQJsonConsumer(RabbitMQProducer rabbitMQProducer, EmailService emailService) {
         this.rabbitMQProducer = rabbitMQProducer;
+        this.emailService = emailService;
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.json.name}")
     public void consumeJsonMessage(NotificationRequestDto notificationRequestDto) {
         log.info("RabbitMQ JSON Message for : {}", notificationRequestDto.recipient());
-        JsonResponseDto jsonResponseDto = new JsonResponseDto("SUCCESSSSS.......");
+        String response = emailService.sendEmail(notificationRequestDto);
+        JsonResponseDto jsonResponseDto = new JsonResponseDto(response);
         rabbitMQProducer.sendResponseMessage(jsonResponseDto);
     }
 }
