@@ -1,7 +1,6 @@
 package com.service.management.notification.consumer;
 
 import com.service.management.notification.dto.JsonResponseDto;
-import com.service.management.notification.dto.NotificationDto;
 import com.service.management.notification.dto.NotificationRequestDto;
 import com.service.management.notification.producer.RabbitMQProducer;
 import com.service.management.notification.service.EmailService;
