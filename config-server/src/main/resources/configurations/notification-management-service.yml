@@ -1,6 +1,9 @@
 spring:
+  application:
+    name: notification-management-service
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/user-management-service
+    url: jdbc:postgresql://localhost:5432/notification-management-service
     username: postgres
     password: cdac
     driver-class-name: org.postgresql.Driver
@@ -8,15 +11,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 15MB
-      max-request-size: 15MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: liquivista@gmail.com
+    password: sbps xhvq vpnw tgba
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
-  port: 9803
+  port: 9804
 
 eureka:
   client:
@@ -35,6 +43,7 @@ rabbitmq:
     name: first_success_exchange
   routing:
     key: first_success_routing_key
+
   response:
     queue:
       name: response_queue

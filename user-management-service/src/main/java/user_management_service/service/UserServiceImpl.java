@@ -7,9 +7,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import user_management_service.Client.DmsFeign;
+import user_management_service.Client.NotificationFeign;
+import user_management_service.dto.NotificationDto;
 import user_management_service.dto.UserRequestDto;
 import user_management_service.dto.UserResponseDto;
 import user_management_service.model.UserModel;
+import user_management_service.producer.RabbitMQJsonProducer;
 import user_management_service.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -26,6 +29,10 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     private final DmsFeign dmsFeign;
+
+    private final NotificationFeign notificationFeign;
+
+    private final RabbitMQJsonProducer rabbitMQJsonProducer;
 
     @Override
     public String registerUser(UserRequestDto userRequestDto) {
@@ -45,6 +52,11 @@ public class UserServiceImpl implements UserService{
             userModel.setUserPassword(encryptedPassword);
 
             UserModel response = userRepository.save(userModel);
+
+            NotificationDto notificationDto = createWelcomeNotification(response);
+
+            rabbitMQJsonProducer.sendJsonMessage(notificationDto);
+
             log.info("User Registered Successfully With User Id: {}", response.getUserId());
             return "User Registered Successfully With User Id: {}" + response.getUserId();
         }catch (Exception e){
@@ -232,5 +244,28 @@ public class UserServiceImpl implements UserService{
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(rawPassword, storedPasswordHash);
     }
+
+    public NotificationDto createWelcomeNotification(UserModel userModel) {
+        return new NotificationDto(
+                userModel.getUserEmail(),
+                "Welcome to the Service",
+                """
+                        Hello,\s
+                        
+                        Thank you for signing up with Liquivista, your one-stop shop for premium liquors!
+                        
+                        We offer a wide selection of beverages, including wines, spirits, and craft beers. Our team at Liquivista is excited to provide you with the best quality products and exceptional service.
+                        
+                        Stay tuned for exciting offers and promotions coming your way soon!
+                        
+                        Cheers!
+                        The Liquivista Team
+                        www.liquivista.com
+                        Contact us: liquivista@gmail.com""",
+                "EMAIL",
+                "System"
+        );
+    }
+
 
 }
