@@ -13,6 +13,8 @@ servlet:
     max-request-size: 10MB
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: http://localhost:9762/eureka/

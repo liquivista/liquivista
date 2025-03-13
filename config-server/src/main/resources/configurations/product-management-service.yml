@@ -19,6 +19,8 @@ server:
   port: 9802
 
 eureka:
-    client:
-      serviceUrl:
-        defaultZone: http://localhost:9762/eureka/
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9762/eureka/
