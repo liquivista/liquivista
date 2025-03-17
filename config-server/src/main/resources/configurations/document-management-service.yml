@@ -2,6 +2,12 @@ server:
   port: 9801
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/keycloak-app
+
   data:
     mongodb:
       uri: mongodb://localhost:27017/document-management-service

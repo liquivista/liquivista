@@ -25,6 +25,7 @@ public class WebSecurityConfiguration {
                         .pathMatchers("/user-management/**").authenticated()
                         .pathMatchers("/product-management/**").authenticated()
                         .pathMatchers("/dms/**").authenticated()
+                        .pathMatchers("/notification-management/**").authenticated()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt());
         return serverHttpSecurity.build();
