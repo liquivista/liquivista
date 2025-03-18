@@ -2,6 +2,8 @@ server:
   port: 9222
 
 spring:
+  application:
+    name: api-gateway
   cloud:
     gateway:
       discovery:
@@ -9,17 +11,30 @@ spring:
           enabled: true
       routes:
         - id: document-management-service
-          uri: lb:http://DOCUMENT-MANAGEMENT-SERVICE
+          uri: lb://DOCUMENT-MANAGEMENT-SERVICE
           predicates:
             - Path=/dms/**
+          filters:
+            - TokenRelay=
         - id: product-management-service
-          uri: lb:http://PRODUCT-MANAGEMENT-SERVICE
+          uri: lb://PRODUCT-MANAGEMENT-SERVICE
           predicates:
             - Path=/product-management/**
+          filters:
+            - TokenRelay=
         - id: user-management-service
-          uri: lb:http://USER-MANAGEMENT-SERVICE
+          uri: lb://USER-MANAGEMENT-SERVICE
           predicates:
             - Path=/user-management/**
+          filters:
+            - TokenRelay=
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/liqui-vista
+
 eureka:
   client:
     serviceUrl:

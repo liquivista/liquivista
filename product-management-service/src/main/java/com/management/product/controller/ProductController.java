@@ -73,8 +73,10 @@ public class ProductController {
 
     @GetMapping("/get-all-products")
     public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+        System.out.println("here lisyt");
         List<ProductResponseDto> products = productService.getAllProducts();
 
+        System.out.println(products.get(1));
         if (products != null && !products.isEmpty()) {
             return new ResponseEntity<>(products, HttpStatus.OK);
         }
