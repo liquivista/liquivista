@@ -19,6 +19,7 @@
         <module>product-management-service</module>
         <module>document-management-service</module>
         <module>api-gateway</module>
+        <module>common-security</module>
         <module>discovery</module>
         <module>config-server</module>
         <module>user-management-service</module>

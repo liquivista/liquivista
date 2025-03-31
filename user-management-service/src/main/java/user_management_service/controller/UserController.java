@@ -3,6 +3,7 @@ package user_management_service.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import user_management_service.dto.UserRequestDto;
@@ -39,6 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/get-all-users")
+    @PreAuthorize("hasRole('ROLE_admin')")
     public ResponseEntity<?> getAllUsers() {
         List<UserResponseDto> users = userService.getAllUsers();
 
