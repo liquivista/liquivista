@@ -23,6 +23,7 @@
         <module>config-server</module>
         <module>user-management-service</module>
         <module>notification-management-service</module>
+        <module>homepage-management-service</module>
     </modules>
 
     <properties>

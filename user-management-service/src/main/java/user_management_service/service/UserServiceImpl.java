@@ -2,6 +2,8 @@ package user_management_service.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import user_management_service.Client.NotificationFeign;
 import user_management_service.dto.NotificationDto;
 import user_management_service.dto.UserRequestDto;
 import user_management_service.dto.UserResponseDto;
+import user_management_service.model.DmsModel;
 import user_management_service.model.UserModel;
 import user_management_service.producer.RabbitMQJsonProducer;
 import user_management_service.repository.UserRepository;
@@ -209,6 +212,26 @@ public class UserServiceImpl implements UserService{
             log.warn("User Not Found with User Id: {}", userId);
             return "Error: User Not Found with User Id: " + userId;
         }
+    }
+
+    @Override
+    public ResponseEntity<?> downloadDocument(String dmsId) {
+        DmsModel document = dmsFeign.downloadDocument(dmsId);
+        log.info("Inside Download Document Product Service with DMS Id: {}",dmsId);
+        if (document != null) {
+            String contentType = document.getFileType();
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+            ByteArrayResource resource = new ByteArrayResource(document.getFileData());
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "inline; filename=" + document.getFileName())
+                    .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+                    .contentLength(document.getFileSize())
+                    .body(resource);
+        }
+        return new ResponseEntity<>("Document not found", HttpStatus.NOT_FOUND);
     }
 
 

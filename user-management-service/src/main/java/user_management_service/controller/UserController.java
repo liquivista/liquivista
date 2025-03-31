@@ -72,7 +72,7 @@ public class UserController {
         return new ResponseEntity<>("User modification failed. Please try again.", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("upload-legal-doc")
+    @PostMapping("/upload-legal-doc")
     public ResponseEntity<?> uploadLegalDoc(@RequestParam("userId") Long userId, @RequestParam("file") MultipartFile file) {
         String response = userService.uploadLegalDoc(userId, file);
 
@@ -83,6 +83,10 @@ public class UserController {
         }
     }
 
+    @GetMapping("/download-document/{dmsId}")
+    public ResponseEntity<?> downloadDocument(@PathVariable String dmsId){
+        return userService.downloadDocument(dmsId);
+    }
 
 
 }

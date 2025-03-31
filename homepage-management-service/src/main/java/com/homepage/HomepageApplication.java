@@ -1,16 +1,15 @@
-package user_management_service;
+package com.homepage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 @EnableFeignClients
-public class UserManagementServiceApplication {
+public class HomepageApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserManagementServiceApplication.class, args);
+		SpringApplication.run(HomepageApplication.class, args);
 	}
 
 }

@@ -1,17 +1,20 @@
-//package api_gateway.config;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-//import org.springframework.security.config.web.server.ServerHttpSecurity;
-//import org.springframework.security.web.server.SecurityWebFilterChain;
-//
-//
-//
-//@Configuration
-//@EnableWebFluxSecurity
-//public class WebSecurityConfiguration {
+package api_gateway.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+@Configuration
+@EnableWebFluxSecurity
+@RequiredArgsConstructor
+public class WebSecurityConfiguration {
 //
 //    private static final String JWK_SET_URI = "http://localhost:8080/realms/keycloak-app/protocol/openid-connect/certs";
 //
@@ -31,4 +34,21 @@
 //        return serverHttpSecurity.build();
 //    }
 //
-//}
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        config.setAllowCredentials(true);
+
+        // Make sure to set the max age to avoid excessive preflight requests
+        config.setMaxAge(3600L);
+
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+}

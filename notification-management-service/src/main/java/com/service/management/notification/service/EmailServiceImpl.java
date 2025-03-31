@@ -30,10 +30,10 @@ public class EmailServiceImpl implements EmailService{
         try {
             javaMailSender.send(email);
             log.info("Email sent successfully to: {}", notificationDto.recipient());
-            return "Email sent successfully to: {}"+ notificationDto.recipient();
+            return "Email sent successfully to: "+ notificationDto.recipient();
         } catch (Exception e) {
             log.error("Failed to send email to: {}", notificationDto.recipient());
-            return "Failed to send email to: {}"+ notificationDto.recipient();
+            return "Failed to send email to: "+ notificationDto.recipient();
         }
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ResponseEntity<?> downloadDocument(String dmsId) {
         DmsModel document = dmsFeign.downloadDocument(dmsId);
-        log.info("Inside Download Document Product Service with DMS Id: {}",dmsId);
+        log.info("Inside Download Document User Service with DMS Id: {}",dmsId);
         if (document != null) {
             String contentType = document.getFileType();
             if (contentType == null) {

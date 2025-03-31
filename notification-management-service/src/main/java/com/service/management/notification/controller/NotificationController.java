@@ -56,9 +56,10 @@ public class NotificationController {
         return new ResponseEntity<>("No notifications found", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/send-email")
-    public String sendEmail(@RequestBody NotificationRequestDto notificationRequestDto){
-        return emailService.sendEmail(notificationRequestDto);
+    @PostMapping("/send-email")
+    public ResponseEntity<String> sendEmail(@RequestBody NotificationRequestDto notificationRequestDto) {
+        String emailSent = emailService.sendEmail(notificationRequestDto);
+            return ResponseEntity.ok(emailSent);
     }
 
 }
