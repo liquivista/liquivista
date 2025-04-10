@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -72,6 +74,7 @@ public class ProductController {
 
 
     @GetMapping("/get-all-products")
+    @PreAuthorize("hasRole('ROLE_admin')")
     public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
         System.out.println("here lisyt");
         List<ProductResponseDto> products = productService.getAllProducts();

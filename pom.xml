@@ -22,6 +22,8 @@
         <module>discovery</module>
         <module>config-server</module>
         <module>user-management-service</module>
+        <module>common-security</module>
+
     </modules>
 
     <properties>
